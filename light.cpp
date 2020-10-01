@@ -114,6 +114,10 @@ ICACHE_RAM_ATTR void lightToggle()
   }
 }
 
+bool lightIsOn()
+{
+  return brightness>minBrightness;
+}
 
 void setBlinkingDuration(uint16_t duration)
 {
@@ -146,7 +150,7 @@ void setup()
 
 void updateParams()
 {
-  logging::getLogStream().printf("light::updateParams\n");
+  logging::getLogStream().printf("light: updateParams\n");
   setMinBrightness(wifi::getParamValueFromID("minBrightness"));
   setMaxBrightness(wifi::getParamValueFromID("maxBrightness"));
   setAutoOffTimer(wifi::getParamValueFromID("autoOffTimer"));
