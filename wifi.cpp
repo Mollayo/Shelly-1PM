@@ -54,7 +54,7 @@ WiFiManagerParameter customParamInit[] = {
   WiFiManagerParameter("<br/><br/><hr><h3>MQTT publish</h3>"),
   WiFiManagerParameter("pubMqttBrightnessLevel", "Brightness change", "light/shellyDevice", 100),
   WiFiManagerParameter("pubMqttSwitchEvents", "Switch events", "switch/shellyDevice", 100),
-  WiFiManagerParameter("pubMqttOverheat", "Overheat alarm", "overheat/shellyDevice", 100),
+  WiFiManagerParameter("pubMqttAlarmOverheat", "Overheat alarm", "shellyDevice/alarm/overheat", 100),
   WiFiManagerParameter("pubMqttTemperature", "Internal temperature", "temperature/shellyDevice", 100),
   WiFiManagerParameter("pubMqttConnecting", "Connecting to the broker", "connecting/shellyDevice", 100),
 
@@ -70,7 +70,7 @@ WiFiManagerParameter customParamInit[] = {
 
   // The debugging options
   WiFiManagerParameter("<br/><br/><hr><h3>Debugging options</h3>"),
-  WiFiManagerParameter("logOutput", "Logging (0: disable, 1: to Serial, 2: to Telnet, 3: to a file)", "2", 1),
+  WiFiManagerParameter("logOutput", "Logging (0: disable, 1: to Serial, 2: to Telnet, 3: to the log file)", "2", 1),
   WiFiManagerParameter("<a href=\"/log.txt\">Open_the_log_file</a>&emsp;<a href=\"/erase_log_file\">Erase_the_log_file</a><br/><br/>"),
 };
 
