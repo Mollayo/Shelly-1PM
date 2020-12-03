@@ -27,7 +27,7 @@ namespace light
   ICACHE_RAM_ATTR void lightToggle();
   ICACHE_RAM_ATTR bool lightIsOn();
 
-  void resetSTM32();
+  void STM32reset();
 
   void sendCmdGetVersion();
   void sendCmdGetState();
@@ -35,6 +35,10 @@ namespace light
   void setup();
   void handle();
   void updateParams();
+
+  void addWifiManagerCustomButtons();
+  void addWifiManagerCustomParams();
+  void bindServerCallback();
 
 } // namespace dimmer
 

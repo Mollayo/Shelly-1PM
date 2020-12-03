@@ -369,9 +369,9 @@ namespace switches {
       {
         char payload[50];
         if (light::lightIsOn())
-          sprintf(payload,"%s LIGHT_ON",BUTTON_STATE_STR[getSwState(switchID)]);
+          sprintf(payload,"%s LIGHT_ON %d",BUTTON_STATE_STR[getSwState(switchID)], switchID);
         else
-          sprintf(payload,"%s LIGHT_OFF",BUTTON_STATE_STR[getSwState(switchID)]);
+          sprintf(payload,"%s LIGHT_OFF %d",BUTTON_STATE_STR[getSwState(switchID)], switchID);
         if (mqtt::publishMQTT(topic,payload))
           getSwState(switchID)=ALREADY_PUBLISHED;
       }

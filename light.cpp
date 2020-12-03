@@ -13,7 +13,7 @@ namespace light {
 
 // The light parameters
 volatile uint8_t minBrightness = 0;   // brightness values in %
-volatile uint8_t maxBrightness = 50;
+volatile uint8_t maxBrightness = 100;
 volatile uint8_t brightness = 0;
 uint8_t prevBrightness = 0;
 uint8_t publishedBrightness = 0;      // The last brigthness value published to MQTT
@@ -162,14 +162,21 @@ void setBlinkingDuration(uint16_t duration)
   }
 }
 
-void resetSTM32()
+void STM32reset()
 {
-  
 }
 
 void setup() 
 {
   pinMode(LIGHT_RELAY, OUTPUT);
+}
+
+void addWifiManagerCustomButtons()
+{
+}
+
+void addWifiManagerCustomParams()
+{
 }
 
 void updateParams()
@@ -180,6 +187,11 @@ void updateParams()
   setAutoOffTimer(wifi::getParamValueFromID("autoOffTimer"));
 }
 
+// HTTP callback for updating the STM32 firmware
+void bindServerCallback()
+{
+}
+ 
 void handle()
 {
   unsigned long currTime;
