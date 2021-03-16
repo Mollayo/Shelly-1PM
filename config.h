@@ -1,8 +1,6 @@
 #ifndef CONFIG
 #define CONFIG
 
-#include <Arduino.h>
-
 
 // For the Shelly Dimmer 2
 /*
@@ -26,7 +24,8 @@
   
 namespace helpers {
 
-  bool isInteger(const char* str, uint maxLength=10);
+  bool isInteger(const char* str, uint8_t maxLength=10);
+  bool convertToInteger(const char* str, uint16_t &val, uint8_t maxLength=10);
   const char* hexToStr(const uint8_t *s, uint8_t len);
 }
 
