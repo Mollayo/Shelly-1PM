@@ -15,13 +15,13 @@ namespace light {
 volatile uint8_t minBrightness = 0;   // brightness values in %
 volatile uint8_t maxBrightness = 100;
 volatile uint8_t brightness = 0;
-uint8_t prevBrightness = 0;
 uint8_t publishedBrightness = 0;      // The last brigthness value published to MQTT
 uint8_t wattage = 0;
 
 // For the auto-off timer
 uint16_t autoOffDuration = 0;         // In seconds
-unsigned long lastLightOnTime = 0;
+volatile unsigned long lastLightOnTime = 0;
+volatile bool lightAutoTurnOffDisable = false;
 
 // For blinking
 unsigned long startBlinkingTime = 0;
@@ -145,8 +145,6 @@ void mqttCallback(const char* paramID, const char* payload)
 {
   if (strcmp(paramID, "subMqttLightOn") == 0 || strcmp(paramID, "subMqttLightAllOn") == 0)
   {
-    // reset the timer
-    lastLightOnTime  = millis();
     lightOn();
   }
   else if (strcmp(paramID, "subMqttLightOff") == 0 || strcmp(paramID, "subMqttLightAllOff") == 0)
@@ -215,9 +213,17 @@ void setBrightness(uint8_t b)
 {
 }
 
-void lightOn()
+void lightOn(bool noLightAutoTurnOff)
 {
   logging::getLogStream().printf("light: switch on\n");
+  if (noLightAutoTurnOff==true)
+  {
+    lightAutoTurnOffDisable =true;
+    lastLightOnTime=0;
+  }
+  else
+    // Reset auto turn off timer
+    lastLightOnTime=millis();
   digitalWrite(LIGHT_RELAY, HIGH);
   brightness = maxBrightness;
 }
@@ -225,20 +231,36 @@ void lightOn()
 void lightOff()
 {
   logging::getLogStream().printf("light: switch off\n");
+  lastLightOnTime = 0;
+  lightAutoTurnOffDisable =false;
   digitalWrite(LIGHT_RELAY, LOW);
   brightness = minBrightness;
 }
 
-ICACHE_RAM_ATTR void lightToggle()
+ICACHE_RAM_ATTR void lightToggle(bool noLightAutoTurnOff)
 {
   // If brighness different from minBrightness
   if (brightness == minBrightness)
   {
+    if (noLightAutoTurnOff==true)
+    {
+      lightAutoTurnOffDisable =true;
+      lastLightOnTime=0;
+    }
+    else
+      // Reset auto turn off timer
+      lastLightOnTime=millis();
+
+    // Switch on the light
     digitalWrite(LIGHT_RELAY, HIGH);
     brightness = maxBrightness;
   }
   else
   {
+    // Set the timer to 0
+    lastLightOnTime = 0;
+    lightAutoTurnOffDisable =false;
+    // Switch off te light
     digitalWrite(LIGHT_RELAY, LOW);
     brightness = minBrightness;
   }
@@ -246,7 +268,7 @@ ICACHE_RAM_ATTR void lightToggle()
 
 ICACHE_RAM_ATTR bool lightIsOn()
 {
-  return brightness > minBrightness;
+  return brightness != minBrightness;
 }
 
 void setup()
@@ -302,7 +324,10 @@ void handle()
 
     // Check if the blinking has to be stopped
     if (currTime - startBlinkingTime > blinkingTimerDuration*1000)
+    {
+      logging::getLogStream().printf("light: stop blinking\n");
       stopBlinking();
+    }
 
     // Alternate on/off for the blinking
     if (blinking)
@@ -346,15 +371,6 @@ void handle()
   }
 
   // For the auto-off light
-  if (brightness != prevBrightness)
-  {
-    // Set the auto-off timer for the brightness change
-    if (brightness > minBrightness)
-      lastLightOnTime  = millis();
-    else
-      lastLightOnTime = 0;
-    prevBrightness = brightness;
-  }
   if (autoOffDuration > 0 && lastLightOnTime > 0)
   {
     currTime = millis();
@@ -363,7 +379,6 @@ void handle()
     {
       logging::getLogStream().printf("light: auto-off light\n");
       lightOff();
-      lastLightOnTime = 0;
     }
   }
 }
