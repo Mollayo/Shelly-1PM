@@ -213,9 +213,9 @@ void setBrightness(uint8_t b)
 {
 }
 
-void lightOn(bool noLightAutoTurnOff)
+ICACHE_RAM_ATTR void lightOn(bool noLightAutoTurnOff)
 {
-  logging::getLogStream().printf("light: switch on\n");
+  //logging::getLogStream().printf("light: switch on\n");
   if (noLightAutoTurnOff==true)
   {
     lightAutoTurnOffDisable =true;
@@ -228,9 +228,9 @@ void lightOn(bool noLightAutoTurnOff)
   brightness = maxBrightness;
 }
 
-void lightOff()
+ICACHE_RAM_ATTR void lightOff()
 {
-  logging::getLogStream().printf("light: switch off\n");
+  //logging::getLogStream().printf("light: switch off\n");
   lastLightOnTime = 0;
   lightAutoTurnOffDisable =false;
   digitalWrite(LIGHT_RELAY, LOW);
