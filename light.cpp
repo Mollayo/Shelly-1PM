@@ -147,6 +147,10 @@ void mqttCallback(const char* paramID, const char* payload)
   {
     lightOn();
   }
+  else if (strcmp(paramID, "subMqttLightToggle") == 0)
+  {
+    lightToggle();
+  }
   else if (strcmp(paramID, "subMqttLightOff") == 0 || strcmp(paramID, "subMqttLightAllOff") == 0)
     lightOff();
   else if (strcmp(paramID, "subMqttBlinkingPattern") == 0)
