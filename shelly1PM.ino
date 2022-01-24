@@ -23,7 +23,7 @@ void setup()
 
   // Setup for the switches and the light
   switches::setup();
-  // Initialise the STM32 MCU
+  // Initialise the relay
   light::setup();
   // Fast blinking to show that the device is booting
   switches::enableBuiltinLedBlinking(switches::LED_FAST_BLINKING);

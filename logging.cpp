@@ -169,9 +169,6 @@ void printTelnetMenu()
   if (Telnet)
   {
     Telnet.println("Commands:");
-    Telnet.println(" res : reset the STM32 MCU");
-    Telnet.println(" s : get the state of the STM32 MCU");
-    Telnet.println(" v : get the version of the STM32 MCU");    
     Telnet.println(" br000 to br100 : set the brightness between 0% and 100%");
     Telnet.println(" on or off : switch on/off the light");
     Telnet.println(" temp : enable/disable temperature logging and overheating alarm");
@@ -188,9 +185,7 @@ void handle()
   if (telnetCmd != NULL)
   {
     // 's' to send the "get state" command
-    if (telnetCmd[0] == 's' && telnetCmd[1] == 0x0D)
-      light::sendCmdGetState();
-    else if (telnetCmd[0] == 'b' && telnetCmd[1] == 'r' && telnetCmd[5] == 0x0D)
+    if (telnetCmd[0] == 'b' && telnetCmd[1] == 'r' && telnetCmd[5] == 0x0D)
     {
       // '0' to '9' to set the brightness from 0% to 90%
       uint16_t v = (telnetCmd[2] - '0') * 100 + (telnetCmd[3] - '0') * 10 + (telnetCmd[4] - '0');
@@ -199,8 +194,6 @@ void handle()
       else
         logging::getLogStream().printf("wrong value for the brightness: %d\n", v);
     }
-    else if (telnetCmd[0] == 'v' && telnetCmd[1] == 0x0D)
-      light::sendCmdGetVersion();
     else if (telnetCmd[0] == 'o' && telnetCmd[1] == 'n' && telnetCmd[2] == 0x0D)
       light::lightOn();
     else if (telnetCmd[0] == 'o' && telnetCmd[1] == 'f' && telnetCmd[2] == 'f' && telnetCmd[3] == 0x0D)
