@@ -1,6 +1,6 @@
 
 /*
-  Firmware for Shelly 1PM: https://shelly.cloud/knowledge-base/devices/shelly-1PM/
+  Firmware for Shelly 1PM: https://kb.shelly.cloud/knowledge-base/shelly-1pm
 */
 
 
@@ -12,12 +12,13 @@
 
 #include "LittleFS.h"
 
+
 void setup()
-{
+{ 
   // Setup serial
   Serial.begin(115200);
 
-  // Mount the File system
+  // Mount the LittleFS
   if (!LittleFS.begin())
     logging::getLogStream().println("Failed to mounted file system");
 
@@ -38,16 +39,16 @@ void setup()
 
 // the loop function runs over and over again forever
 void loop()
-{
+{   
   wifi::handle();
-  
+
   // Process the telnet commands
   // Interactive console for debugging
   logging::handle();
-  
+
   // Process data for MQTT
   mqtt::handle();
-  
+
   // Process serial data from the MCU
   light::handle();
 
